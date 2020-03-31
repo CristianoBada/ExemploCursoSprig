@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.curso.error.CustomErrorType;
+import com.spring.curso.error.ResourceNotFoundException;
 import com.spring.curso.model.Student;
 import com.spring.curso.repository.StudentRepository;
 
@@ -31,35 +32,40 @@ public class StudentEndpoint {
 	public ResponseEntity<?> listAll() {
 		return new ResponseEntity<>(studentDAO.findAll(), HttpStatus.OK);
 	}
-	
+
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<?> getStudentById(@PathVariable("id") Long id) {
-		Student student = studentDAO.findById(id).get();
-		if (student == null) {
-			return new ResponseEntity<>(new CustomErrorType("Student not found"), HttpStatus.NOT_FOUND);
-		}
-		return  new ResponseEntity<>(student, HttpStatus.OK);
+		verifyIfStudentExists(id);
+		Student student = studentDAO.findById(id).get(); 
+		return new ResponseEntity<>(student, HttpStatus.OK);
 	}
-	
+
+	private void verifyIfStudentExists(Long id) {
+		if (!studentDAO.findById(id).isPresent())
+			throw new ResourceNotFoundException("Student not found for ID: " + id);
+	}
+
 	@GetMapping(path = "/findByName/{name}")
 	public ResponseEntity<?> getStudentByName(@PathVariable("name") String name) {
-		return  new ResponseEntity<>(studentDAO.findByNameIgnoreCaseContaining(name), HttpStatus.OK);
+		return new ResponseEntity<>(studentDAO.findByNameIgnoreCaseContaining(name), HttpStatus.OK);
 	}
 
 	@PostMapping
 	public ResponseEntity<?> save(@RequestBody Student student) {
-		return  new ResponseEntity<>(studentDAO.save(student), HttpStatus.CREATED);
+		return new ResponseEntity<>(studentDAO.save(student), HttpStatus.CREATED);
 	}
-	
+
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> delete(@PathVariable Long id) {
+		verifyIfStudentExists(id);
 		studentDAO.deleteById(id);
-		return  new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@PutMapping
 	public ResponseEntity<?> update(@RequestBody Student student) {
+		verifyIfStudentExists(student.getId());
 		studentDAO.save(student);
-		return  new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

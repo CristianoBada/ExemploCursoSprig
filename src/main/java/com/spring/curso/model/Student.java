@@ -1,11 +1,6 @@
 package com.spring.curso.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
-
-import static java.util.Arrays.asList;
 
 @Entity
 public class Student extends AbstractEntity {
