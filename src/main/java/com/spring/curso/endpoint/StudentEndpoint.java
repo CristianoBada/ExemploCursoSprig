@@ -1,8 +1,12 @@
 package com.spring.curso.endpoint;
 
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.spring.curso.error.CustomErrorType;
 import com.spring.curso.error.ResourceNotFoundException;
 import com.spring.curso.model.Student;
 import com.spring.curso.repository.StudentRepository;
@@ -51,7 +54,8 @@ public class StudentEndpoint {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> save(@RequestBody Student student) {
+	@Transactional
+	public ResponseEntity<?> save(@Valid @RequestBody Student student) {
 		return new ResponseEntity<>(studentDAO.save(student), HttpStatus.CREATED);
 	}
 
@@ -63,7 +67,7 @@ public class StudentEndpoint {
 	}
 
 	@PutMapping
-	public ResponseEntity<?> update(@RequestBody Student student) {
+	public ResponseEntity<?> update(@Valid @RequestBody Student student) {
 		verifyIfStudentExists(student.getId());
 		studentDAO.save(student);
 		return new ResponseEntity<>(HttpStatus.OK);

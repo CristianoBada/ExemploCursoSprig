@@ -1,33 +1,50 @@
 package com.spring.curso.error;
 
-public class ResourceNotFoundDetails {
+public class ErrorDetails {
 	private String title;
 	private int status;
 	private String details;
 	private long timestamp;
 	private String developerMessage;
 
-	private ResourceNotFoundDetails() {
-	}
-
 	public String getTitle() {
 		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public int getStatus() {
 		return status;
 	}
 
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
 	public String getDetails() {
 		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
 
 	public long getTimestamp() {
 		return timestamp;
 	}
 
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
+	}
+
 	public String getDeveloperMessage() {
 		return developerMessage;
+	}
+
+	public void setDeveloperMessage(String developerMessage) {
+		this.developerMessage = developerMessage;
 	}
 
 	public static final class Builder {
@@ -69,15 +86,15 @@ public class ResourceNotFoundDetails {
 			this.developerMessage = developerMessage;
 			return this;
 		}
-		
-		public ResourceNotFoundDetails build() {
-			ResourceNotFoundDetails resourceNotFoundDetails = new ResourceNotFoundDetails();
-			resourceNotFoundDetails.developerMessage = this.developerMessage;
-			resourceNotFoundDetails.title = this.title;
-			resourceNotFoundDetails.details = this.details;
-			resourceNotFoundDetails.timestamp = this.timestamp;
-			resourceNotFoundDetails.status = this.status;
-			return resourceNotFoundDetails;
+
+		public ErrorDetails build() {
+			ErrorDetails errorDetails = new ErrorDetails();
+			errorDetails.setDeveloperMessage(this.developerMessage);
+			errorDetails.setTitle(this.title);
+			errorDetails.setDetails(this.details);
+			errorDetails.setTimestamp(this.timestamp);
+			errorDetails.setStatus(this.status);
+			return errorDetails;
 		}
 	}
 
